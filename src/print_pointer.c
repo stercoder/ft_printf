@@ -1,19 +1,39 @@
-#include "../inc/ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_pointer.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ykhindou <ykhindou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/10 16:18:04 by ykhindou          #+#    #+#             */
+/*   Updated: 2024/11/10 16:25:07 by ykhindou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static void print_hex_pointer(unsigned long ptr)
+#include "../inc/ft_printf.h"
+#include <unistd.h>
+
+static int	print_hex_pointer(unsigned long ptr)
 {
-    if (ptr >= 16)
-        print_hex_pointer(ptr / 16);
-    write(1, &"0123456789abcdef"[ptr % 16], 1);
+	int	count;
+
+	count = 0;
+	if (ptr >= 16)
+		count += print_hex_pointer(ptr / 16);
+	count += write(1, &"0123456789abcdef"[ptr % 16], 1);
+	return (count);
 }
 
-int print_pointer(void *ptr)
+int	print_pointer(void *ptr)
 {
-    unsigned long address = (unsigned long)ptr;
-    int count = write(1, "0x", 2);
-    if (address == 0)
-        count += write(1, "0", 1);
-    else
-        print_hex_pointer(address);
-    return count;
+	unsigned long	address;
+	int				count;
+
+	address = (unsigned long)ptr;
+	count = write(1, "0x", 2);
+	if (address == 0)
+		count += write(1, "0", 1);
+	else
+		count += print_hex_pointer(address);
+	return (count);
 }
